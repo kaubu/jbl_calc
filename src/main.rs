@@ -21,6 +21,7 @@
 
 #[macro_use] extern crate tramp;
 
+use std::fmt;
 use tramp::{tramp, Rec};
 
 #[derive(Debug, Clone)]
@@ -62,6 +63,34 @@ impl HMSTime {
     }
 
     
+}
+
+impl fmt::Display for HMSTime {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        let hours = match self.hours {
+            x if x == 1.0 => "1 hour".to_owned(),
+            _ => format!("{} hours", round_float_to_dp(self.hours, 2)),
+        };
+
+        let minutes = match self.minutes {
+            x if x == 1.0 => "1 minute".to_owned(),
+            _ => format!("{} minutes", round_float_to_dp(self.minutes, 2)),
+        };
+
+        let seconds = match self.seconds {
+            x if x == 1.0 => "1 second".to_owned(),
+            _ => format!("{} seconds", round_float_to_dp(self.seconds, 2)),
+        };
+
+        write!(f, "{}, {}, and {}", hours, minutes, seconds)
+    }
+}
+
+// Rounds a float to a decimal place
+// round_float_to_dp(53.12859, 2) = 52.13
+fn round_float_to_dp(num: f64, dp: i32) -> f64 {
+    let tens = f64::powi(10.0, dp);
+    (num * tens).round() / tens
 }
 
 fn round_up(time_object: HMSTime) -> HMSTime {
@@ -132,9 +161,9 @@ fn time_from_percentage(percentage: f64) -> HMSTime {
 }
 
 fn main() {
-    println!("Time from 1%: {:?}", time_from_percentage(1.0));
-    println!("Time from 100%: {:?}", time_from_percentage(100.0));
-    println!("Time from 64%: {:?}", time_from_percentage(64.0));
-    println!("Time from 23.8%: {:?}", time_from_percentage(23.8));
-    println!("Time from 30.0%: {:?}", time_from_percentage(30.0));
+    println!("Time from 1%: {}", time_from_percentage(1.0));
+    println!("Time from 100%: {}", time_from_percentage(100.0));
+    println!("Time from 64%: {}", time_from_percentage(64.0));
+    println!("Time from 23.8%: {}", time_from_percentage(23.8));
+    println!("Time from 30.0%: {}", time_from_percentage(30.0));
 }
