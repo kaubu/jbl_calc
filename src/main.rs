@@ -79,8 +79,6 @@ fn round_up(time_object: HMSTime) -> HMSTime {
                 time_object.minutes - time_object.minutes.fract(),
                 time_object.seconds + seconds,
             );
-
-            // println!("\tMINUTES LOOP\n\tbefore: {:?}\n\tafter: {:?}\n------", time_object, time);
             
             rec_call!(round_up_rec(time))
         } else if time_object.hours.fract() != 0.0 {
@@ -93,20 +91,15 @@ fn round_up(time_object: HMSTime) -> HMSTime {
                 time_object.minutes + minutes,
                 time_object.seconds,
             );
-
-            // println!("\tHOURS LOOP\n\tbefore: {:?}\n\tafter: {:?}\n\t-----", time_object, time);
             
             rec_call!(round_up_rec(time))
         } else if time_object.minutes < 60.0 && time_object.seconds < 60.0 {
-            // println!("\tESCAPE LOOP\n\t-----");
             rec_ret!(time_object);
         } else if time_object.minutes < 60.0 && time_object.seconds > 60.0 {
             // (minutes, seconds)
             let ms = time_object.seconds_to_minutes();
 
             let time = HMSTime {
-                // hours: time_object.hours + hm.0,
-                // minutes: time_object.minutes + hm.1 + ms.0,
                 hours: time_object.hours,
                 minutes: time_object.minutes + ms.0,
                 seconds: ms.1,
@@ -120,14 +113,10 @@ fn round_up(time_object: HMSTime) -> HMSTime {
             let ms = time_object.seconds_to_minutes();
             
             let time = HMSTime {
-                // hours: time_object.hours + hm.0,
-                // minutes: time_object.minutes + hm.1 + ms.0,
                 hours: hm.0,
                 minutes: hm.1 + ms.0,
                 seconds: ms.1,
             };
-
-            // println!("\tELSE LOOP\n\tbefore: {:?}\n\tafter: {:?}\n\t-----", time_object, time);
             
             rec_call!(round_up_rec(time))
         }
@@ -137,7 +126,6 @@ fn round_up(time_object: HMSTime) -> HMSTime {
 }
 
 fn time_from_percentage(percentage: f64) -> HMSTime {
-    // time_from_percentage = PERCENTAGE * 9.6 = amount of minutes
     let minutes = percentage * 9.6;
     let time = HMSTime::new(0.0, minutes, 0.0);
     round_up(time)
